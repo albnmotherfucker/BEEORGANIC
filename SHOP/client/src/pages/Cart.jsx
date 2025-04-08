@@ -1,26 +1,29 @@
-import styled from "styled-components"
-import Navbar from "../components/Navbar"
-import Announcment from "../components/Announcment"
-import Footer from "../components/Footer"
-import { Add, Remove } from "@mui/icons-material"
+import styled from "styled-components";
+import Navbar from "../components/Navbar";
+import Announcment from "../components/Announcment";
+import Footer from "../components/Footer";
+import { useState } from "react";
+import CheckoutModal from "../components/CheckoutModal";
+import { Add, Remove } from "@mui/icons-material";
+import { useSelector } from "react-redux";
 
 const Contaienr = styled.div`
   background-color: #f4f4f4;
   min-height: 100vh;
   font-family: 'Arial', sans-serif;
   transition: all 0.3s ease;
-`
+`;
 
 const Wrapper = styled.div`
   padding: 40px 20px;
-`
+`;
 
 const Title = styled.h1`
   font-weight: 500;
   text-align: center;
   font-size: 30px;
   margin-bottom: 30px;
-`
+`;
 
 const Top = styled.div`
   display: flex;
@@ -31,7 +34,7 @@ const Top = styled.div`
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 40px;
-`
+`;
 
 const TopButton = styled.button`
   padding: 12px 30px;
@@ -47,12 +50,12 @@ const TopButton = styled.button`
     background-color: ${props => props.type === "filled" ? "#444" : "#e0e0e0"};
     transform: translateY(-3px);
   }
-`
+`;
 
 const TopTexts = styled.div`
   display: flex;
   align-items: center;
-`
+`;
 
 const TopText = styled.span`
   text-decoration: underline;
@@ -64,19 +67,19 @@ const TopText = styled.span`
   &:hover {
     color: #333;
   }
-`
+`;
 
 const Bottom = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
   flex-wrap: wrap;
-`
+`;
 
 const Info = styled.div`
   flex: 3;
   margin-right: 20px;
-`
+`;
 
 const Product = styled.div`
   display: flex;
@@ -84,7 +87,7 @@ const Product = styled.div`
   background-color: #fff;
   border-radius: 15px;
   padding: 20px;
-  margin-bottom: 25 px;
+  margin-bottom: 25px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 
@@ -92,47 +95,47 @@ const Product = styled.div`
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
   }
-`
+`;
 
 const ProductDetail = styled.div`
   flex: 2;
   display: flex;
-`
+`;
 
 const Image = styled.img`
   width: 150px;
   height: 150px;
   object-fit: cover;
   border-radius: 10px;
-`
+`;
 
 const Details = styled.div`
   padding-left: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-`
+`;
 
 const ProductName = styled.span`
   font-weight: 600;
   font-size: 18px;
-`
+`;
 
 const ProductId = styled.span`
   font-size: 14px;
   color: #888;
-`
+`;
 
 const ProductColor = styled.div`
   width: 20px;
   height: 20px;
   border-radius: 50%;
   background-color: ${props => props.color};
-`
+`;
 
 const ProductSize = styled.span`
   font-size: 14px;
-`
+`;
 
 const PriceDetail = styled.div`
   flex: 1;
@@ -140,31 +143,31 @@ const PriceDetail = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-`
+`;
 
 const ProductAmountContainer = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 20px;
-`
+`;
 
 const ProductAmount = styled.div`
   font-weight: 600;
   font-size: 18px;
   margin: 0 15px;
-`
+`;
 
 const ProductPrice = styled.div`
   font-size: 24px;
   font-weight: 600;
   color: #333;
-`
+`;
 
 const Hr = styled.hr`
   background-color: #ddd;
   border: none;
   margin: 2px;
-`
+`;
 
 const Summary = styled.div`
   flex: 1;
@@ -176,14 +179,14 @@ const Summary = styled.div`
   flex-direction: column;
   justify-content: center;
   display: flex;
-`
+`;
 
 const SummaryTitle = styled.h1`
   font-weight: 600;
   font-size: 22px;
   margin-bottom: 20px;
   color: #333;
-`
+`;
 
 const SummaryItem = styled.div`
   margin: 15px 0;
@@ -191,11 +194,11 @@ const SummaryItem = styled.div`
   justify-content: space-between;
   font-weight: ${props => props.type === "total" ? "700" : "400"};
   font-size: ${props => props.type === "total" ? "24px" : "16px"};
-`
+`;
 
-const SummaryItemText = styled.span``
+const SummaryItemText = styled.span``;
 
-const SummaryItemPrice = styled.span``
+const SummaryItemPrice = styled.span``;
 
 const Button = styled.button`
   width: 100%;
@@ -212,9 +215,12 @@ const Button = styled.button`
     background-color: #444;
     transform: translateY(-3px);
   }
-`
+`;
 
 const Cart = () => {
+  const cart = useSelector((state) => state.cart);
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <Contaienr>
       <Announcment />
@@ -227,115 +233,38 @@ const Cart = () => {
             <TopText>Shopping Cart</TopText>
             <TopText>Wish List</TopText>
           </TopTexts>
-          <TopButton type="filled">Checkout</TopButton>
+          <TopButton type="filled" onClick={() => setShowModal(true)}>Checkout</TopButton>
         </Top>
         <Bottom>
           <Info>
-            <Product>
-              <ProductDetail>
-                <Image src="https://images.steamusercontent.com/ugc/940558793884864379/9FD15455A1576843D110504B4B548D2780127D4E/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false" />
-                <Details>
-                  <ProductName>Jessie Shoes</ProductName>
-                  <ProductId>Id: 231321233</ProductId>
-                  <ProductColor color="black" />
-                  <ProductSize>Size: M</ProductSize>
-                </Details>
-              </ProductDetail>
-              <PriceDetail>
-                <ProductAmountContainer>
-                  <Add />
-                  <ProductAmount>2</ProductAmount>
-                  <Remove />
-                </ProductAmountContainer>
-                <ProductPrice>$300</ProductPrice>
-              </PriceDetail>
-            </Product>
-            <Hr/>
-            <Product>
-              <ProductDetail>
-                <Image src="https://images.steamusercontent.com/ugc/940558793884864379/9FD15455A1576843D110504B4B548D2780127D4E/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false" />
-                <Details>
-                  <ProductName>Jessie Shoes</ProductName>
-                  <ProductId>Id: 231321233</ProductId>
-                  <ProductColor color="black" />
-                  <ProductSize>Size: M</ProductSize>
-                </Details>
-              </ProductDetail>
-              <PriceDetail>
-                <ProductAmountContainer>
-                  <Add />
-                  <ProductAmount>2</ProductAmount>
-                  <Remove />
-                </ProductAmountContainer>
-                <ProductPrice>$300</ProductPrice>
-              </PriceDetail>
-            </Product>
-            <Hr/>
-            <Product>
-              <ProductDetail>
-                <Image src="https://images.steamusercontent.com/ugc/940558793884864379/9FD15455A1576843D110504B4B548D2780127D4E/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false" />
-                <Details>
-                  <ProductName>Jessie Shoes</ProductName>
-                  <ProductId>Id: 231321233</ProductId>
-                  <ProductColor color="black" />
-                  <ProductSize>Size: M</ProductSize>
-                </Details>
-              </ProductDetail>
-              <PriceDetail>
-                <ProductAmountContainer>
-                  <Add />
-                  <ProductAmount>2</ProductAmount>
-                  <Remove />
-                </ProductAmountContainer>
-                <ProductPrice>$300</ProductPrice>
-              </PriceDetail>
-            </Product>
-            <Hr/>
-            <Product>
-              <ProductDetail>
-                <Image src="https://images.steamusercontent.com/ugc/940558793884864379/9FD15455A1576843D110504B4B548D2780127D4E/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false" />
-                <Details>
-                  <ProductName>Jessie Shoes</ProductName>
-                  <ProductId>Id: 231321233</ProductId>
-                  <ProductColor color="black" />
-                  <ProductSize>Size: M</ProductSize>
-                </Details>
-              </ProductDetail>
-              <PriceDetail>
-                <ProductAmountContainer>
-                  <Add />
-                  <ProductAmount>2</ProductAmount>
-                  <Remove />
-                </ProductAmountContainer>
-                <ProductPrice>$300</ProductPrice>
-              </PriceDetail>
-            </Product>
+            {cart.products.map((product) => (
+              <Product key={product._id}>
+                <ProductDetail>
+                  <Image src={product.img} />
+                  <Details>
+                    <ProductName><b>Produkti:</b> {product.Title}</ProductName>
+                    <ProductId><b>ID:</b> {product._id}</ProductId>
+                    <ProductColor color={product.color} />
+                    <ProductSize><b>Madhesia:</b> {product.size}</ProductSize>
+                  </Details>
+                </ProductDetail>
+                <PriceDetail>
+                  <ProductAmountContainer>
+                    <Add />
+                    <ProductAmount>{product.quantity}</ProductAmount>
+                    <Remove />
+                  </ProductAmountContainer>
+                  <ProductPrice>€ {product.price * product.quantity}</ProductPrice>
+                </PriceDetail>
+              </Product>
+            ))}
             <Hr />
-            <Product>
-              <ProductDetail>
-                <Image src="https://images.steamusercontent.com/ugc/940558793884864379/9FD15455A1576843D110504B4B548D2780127D4E/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false" />
-                <Details>
-                  <ProductName>Jessie Shoes</ProductName>
-                  <ProductId>Id: 231321233</ProductId>
-                  <ProductColor color="black" />
-                  <ProductSize>Size: M</ProductSize>
-                </Details>
-              </ProductDetail>
-              <PriceDetail>
-                <ProductAmountContainer>
-                  <Add />
-                  <ProductAmount>2</ProductAmount>
-                  <Remove />
-                </ProductAmountContainer>
-                <ProductPrice>$300</ProductPrice>
-              </PriceDetail>
-            </Product>
           </Info>
           <Summary>
             <SummaryTitle>Order Summary</SummaryTitle>
             <SummaryItem>
               <SummaryItemText>Subtotal</SummaryItemText>
-              <SummaryItemPrice>$90</SummaryItemPrice>
+              <SummaryItemPrice>€{cart.total}</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem>
               <SummaryItemText>Shipping</SummaryItemText>
@@ -347,15 +276,16 @@ const Cart = () => {
             </SummaryItem>
             <SummaryItem type="total">
               <SummaryItemText>Total</SummaryItemText>
-              <SummaryItemPrice>$122</SummaryItemPrice>
+              <SummaryItemPrice>€{cart.total}</SummaryItemPrice>
             </SummaryItem>
-            <Button>Checkout Now</Button>
+            <Button onClick={() => setShowModal(true)}>Checkout</Button>
           </Summary>
         </Bottom>
       </Wrapper>
       <Footer />
+      {showModal && <CheckoutModal onClose={() => setShowModal(false)} />}
     </Contaienr>
-  )
-}
+  );
+};
 
-export default Cart
+export default Cart;

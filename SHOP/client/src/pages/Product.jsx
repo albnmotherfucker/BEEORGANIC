@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { mobile } from "../responsive";
 import { Add, Remove } from "@mui/icons-material";
-
 import Navbar from "../components/Navbar";
 import Announcment from "../components/Announcment";
 import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";
 import { publicRequest } from "../requestMethods";
+import { addProduct } from "../redux/cartRedux";
+import { useDispatch } from "react-redux";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -108,11 +110,12 @@ const Button = styled.button`
 const Product = () => {
   const location = useLocation();
   const id = location.pathname.split("/")[2];
-
   const [product, setProduct] = useState({});
-  const [quantity, setQuantity] = useState(1); 
-  const [color, setColor] = useState(""); 
-  const [size, setSize] = useState(""); 
+  const [quantity, setQuantity] = useState(1);
+  const [color, setColor] = useState("");
+  const [size, setSize] = useState("");
+  const dispatch = useDispatch();
+
 
   useEffect(() => {
     const getProduct = async () => {
@@ -135,9 +138,13 @@ const Product = () => {
   };
 
   const handleClick = () => {
-    // Add to cart logic here
-    console.log("Added to cart:", { ...product, quantity, color, size });
-  }
+    dispatch(addProduct({ ...product, quantity, color, size }));
+
+
+
+
+
+  };
 
   return (
     <Container>
@@ -155,7 +162,7 @@ const Product = () => {
             <Filter>
               <FilterTitle>Color</FilterTitle>
               {product.color?.map((c) => (
-                <FilterColor color={c} key={c} onClick={() => setColor(c)}/>
+                <FilterColor color={c} key={c} onClick={() => setColor(c)} />
               ))}
             </Filter>
             <Filter>
@@ -169,7 +176,7 @@ const Product = () => {
           </FilterContainer>
           <AddContainer>
             <AmountContainer>
-            <Remove onClick={() => handleQuantity("dec")} />
+              <Remove onClick={() => handleQuantity("dec")} />
               <Amount>{quantity}</Amount>
               <Add onClick={() => handleQuantity("inc")} />
             </AmountContainer>
