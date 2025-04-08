@@ -103,6 +103,12 @@ const CheckoutModal = ({ onClose }) => {
   };
 
   const handleSubmit = async () => {
+
+    if (!formData.name || !formData.phone || !formData.city || !formData.address) {
+      alert("Please fill in all the required fields.");
+      return;
+    }
+
     const orderData = {
       userId: "67f0442430cb41863aa7f468",
       products: cart.products.map((item) => ({
@@ -160,7 +166,7 @@ const CheckoutModal = ({ onClose }) => {
         <Input placeholder="City" name="city" onChange={handleChange} />
         <Input placeholder="Address" name="address" onChange={handleChange} />
 
-        {orderPlaced && <SuccessMessage>Order placed!</SuccessMessage>}
+        {orderPlaced && <SuccessMessage>Porosi e sukseseshme!</SuccessMessage>}
 
         <Button onClick={handleSubmit}>Place Order</Button>
         <Button onClick={onClose} style={{ backgroundColor: "gray", marginTop: "10px" }}>Cancel</Button>
