@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
 import { useState } from "react";
+import { login } from "../redux/apiCalls";
+import { useDispatch } from "react-redux";
 
 const Container = styled.div`
   width: 100vw;
@@ -90,36 +92,39 @@ const Link = styled.a`
 `;
 
 const Login = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-
-    const handleClick = (e) => {
-        e.preventDefault();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
 
 
-    }
+  const handleClick = (e) => {
+    e.preventDefault();
+    login(dispatch, { username, password });
 
-    return (
-        <Container>
-            <Wrapper>
-                <Title>Sign In</Title>
-                <Form>
-                    <Input
-                        placeholder="Username"
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                    <Input
-                        placeholder="Password"
-                        type="password"
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <Button onClick={handleClick}>Log In</Button>
-                    <Link>Forgot your password?</Link>
-                    <Link>Create a new account</Link>
-                </Form>
-            </Wrapper>
-        </Container>
-    );
+
+  }
+
+  return (
+    <Container>
+      <Wrapper>
+        <Title>Sign In</Title>
+        <Form>
+          <Input
+            placeholder="Username"
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <Input
+            placeholder="Password"
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button onClick={handleClick}>Log In</Button>
+          <Link>Forgot your password?</Link>
+          <Link>Create a new account</Link>
+        </Form>
+      </Wrapper>
+    </Container>
+  );
 };
 
 export default Login;
