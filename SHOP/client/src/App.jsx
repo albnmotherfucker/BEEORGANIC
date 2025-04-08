@@ -7,7 +7,7 @@ import Cart from "./pages/Cart";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 const App = () => {
-  const user = true;
+  const user = false;
 
   return (
     <Router>
